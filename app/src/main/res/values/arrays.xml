@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="courseTypes">
+        <item>全校公选课</item>
+        <item>全校必修课</item>
+        <item>本专业计划</item>
+    </string-array>
+</resources>

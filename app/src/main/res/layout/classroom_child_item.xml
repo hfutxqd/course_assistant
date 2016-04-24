@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="评估方式:笔试"
+        android:id="@+id/assessment"
+        android:lineSpacingExtra="5sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="优选范围:2013级测控专业,2013级光信息"
+        android:id="@+id/range"
+        android:lineSpacingExtra="5sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/timeAndPlace"
+        android:lineSpacingExtra="5sp"
+        android:text="时间地点:周四:(5-6节) (1-7单周)西二108"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/prohibit"
+        android:lineSpacingExtra="5sp"
+        android:text="禁选专业:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/remarks"
+        android:lineSpacingExtra="5sp"
+        android:text="备注:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_selectIt"
+        android:text="@string/btn_selectIt_string"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        android:background="@color/material_deep_teal_500"
+        android:textColor="@color/abc_primary_text_material_dark" />
+</LinearLayout>
