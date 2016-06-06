@@ -1,6 +1,5 @@
 package xyz.imxqd.course_assistant.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -10,8 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -19,33 +16,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import xyz.imxqd.course_assistant.R;
 import xyz.imxqd.course_assistant.adapter.ConfirmListAdapter;
 import xyz.imxqd.course_assistant.application.CourseAssistant;
-import xyz.imxqd.course_assistant.fragment.ClassroomFragment;
 import xyz.imxqd.course_assistant.fragment.CourseFragment;
 import xyz.imxqd.course_assistant.fragment.NewSubmitFragment;
-import xyz.imxqd.course_assistant.fragment.PlaceholderFragment;
 import xyz.imxqd.course_assistant.fragment.SelectedFragment;
-import xyz.imxqd.course_assistant.model.Classroom;
-import xyz.imxqd.course_assistant.model.CourseItem;
-import xyz.imxqd.course_assistant.model.SelectItem;
 import xyz.imxqd.course_assistant.view.BadgeView;
 import xyz.imxqd.course_assistant.view.LoginDialog;
 import xyz.imxqd.course_assistant.web.CourseTool;
@@ -309,8 +297,8 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
             new AlertDialog.Builder(this)
                     .setTitle(R.string.submit_confirm_title)
                     .setAdapter(new ConfirmListAdapter(), null)
-                    .setNegativeButton("取消", null)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.string_confirm, null)
+                    .setPositiveButton(R.string.string_cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             task = new SubmitTask();

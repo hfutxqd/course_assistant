@@ -30,7 +30,6 @@
     <string name="section_1">已选课程</string>
     <string name="section_2">全部课程</string>
     <string name="section_3">等待提交</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="submit_confirm_title">确定提交</string>
     <string name="title_activity_main">选课助手</string>
     <string name="string_selected">已选择</string>
@@ -39,4 +38,7 @@
     <string name="string_range">优选范围: \n%s</string>
     <string name="string_timeAndPlace">时间地点:\n%s</string>
     <string name="string_prohibit">禁选专业:%s</string>
+    <string name="string_get_data_failed">获取数据失败,可能选课时间未到或登陆信息失效</string>
+    <string name="string_confirm">确定</string>
+    <string name="string_cancel">取消</string>
 </resources>

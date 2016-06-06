@@ -2,8 +2,6 @@ package xyz.imxqd.course_assistant.application;
 
 import android.app.Application;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,7 +29,6 @@ public class CourseAssistant  extends Application{
         toSubmitMap = new HashMap<>();
         newSubmitMap = new HashMap<>();
         newSubmitClassroomMap = new HashMap<>();
-        Logger.init("CourseAssistant");
         super.onCreate();
     }
 

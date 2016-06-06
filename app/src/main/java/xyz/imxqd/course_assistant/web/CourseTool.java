@@ -1,5 +1,4 @@
 package xyz.imxqd.course_assistant.web;
-import com.orhanobut.logger.Logger;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -163,9 +162,6 @@ public class CourseTool {
                 item.setSelectedCount(table.child(2).child(0).text());
                 item.setTotalCount(table.child(2).child(1).text());
                 item.setTimeAndPlace(table.child(4).child(0).text());
-
-                Logger.i(table.child(4).html());
-
                 item.setRemarks(table.child(5).child(0).text());
                 item.setTeacher(i.child(2).text());
                 item.setRange(i.child(3).text());

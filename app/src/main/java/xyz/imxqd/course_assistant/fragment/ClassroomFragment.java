@@ -114,7 +114,7 @@ public class ClassroomFragment extends Fragment implements ClassroomAdapter.OnCl
             {
                 adapter.notifyDataSetChanged();
             }else {
-                Toast.makeText(getContext(), "获取数据失败,请尝试重新登录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.string_get_data_failed), Toast.LENGTH_SHORT).show();
             }
             progressDialog.dismiss();
             task = null;
