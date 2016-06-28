@@ -43,8 +43,7 @@ public class CourseAssistant  extends Application{
     }
 
     //设置之前已被选中的课程
-    public void setSelected(ArrayList<SelectItem> list)
-    {
+    public void setSelected(ArrayList<SelectItem> list) {
         selectItemList = list;
         for(SelectItem item:list)
         {
@@ -53,8 +52,7 @@ public class CourseAssistant  extends Application{
     }
 
 
-    public void add(String courseCode, Classroom item)
-    {
+    public void add(String courseCode, Classroom item) {
         toSubmitMap.put(courseCode, item.getClassNo());
         newSubmitMap.put(courseCode, item.getClassNo());
         newSubmitClassroomMap.put(courseCode, item);
@@ -65,8 +63,7 @@ public class CourseAssistant  extends Application{
         }
     }
 
-    public void remove(String courseCode)
-    {
+    public void remove(String courseCode) {
         toSubmitMap.remove(courseCode);
         newSubmitClassroomMap.remove(courseCode);
         newSubmitMap.remove(courseCode);
@@ -76,6 +73,17 @@ public class CourseAssistant  extends Application{
             adapter.update();
             adapter.notifyDataSetChanged();
         }
+    }
+
+    public String get(String courseCode){
+        return toSubmitMap.get(courseCode);
+    }
+
+    public void clear(){
+        newSubmitMap.clear();
+        newSubmitClassroomMap.clear();
+        toSubmitMap.clear();
+        selectItemList.clear();
     }
 
     public HashMap<String, String> getToSubmitMap()

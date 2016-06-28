@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,8 +25,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import xyz.imxqd.course_assistant.R;
@@ -94,7 +97,12 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_help) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.help_dialog_title)
+                    .setMessage(R.string.help_dialog_message)
+                    .setPositiveButton(R.string.string_confirm, null)
+                    .show();
             return true;
         }else if(id == R.id.action_swich_user)
         {
@@ -290,15 +298,13 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         dialog.setCallBack(this);
     }
 
-    public void submit()
-    {
-        if(CourseTool.cookie != null && CourseTool.studentNo != null)
-        {
+    public void submit() {
+        if(CourseTool.cookie != null && CourseTool.studentNo != null) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.submit_confirm_title)
                     .setAdapter(new ConfirmListAdapter(), null)
-                    .setNegativeButton(R.string.string_confirm, null)
-                    .setPositiveButton(R.string.string_cancel, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.string_cancel, null)
+                    .setPositiveButton(R.string.string_confirm, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             task = new SubmitTask();
@@ -311,8 +317,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     SubmitTask task = null;
 
-    class SubmitTask extends AsyncTask<Void, Void, String>
-    {
+    class SubmitTask extends AsyncTask<Void, Void, Document> {
         ProgressDialog progressDialog;
         @Override
         protected void onPreExecute() {
@@ -321,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Document doInBackground(Void... params) {
             HashMap<String, String> map = CourseAssistant.getInstance().getToSubmitMap();
             try {
                 return CourseTool.submit(map);
@@ -332,13 +337,25 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         }
 
         @Override
-        protected void onPostExecute(String success) {
+        protected void onPostExecute(Document html) {
             progressDialog.dismiss();
-            if(success != null)
-            {
+            if(html != null) {
+                html.body().getElementsByTag("div").remove();
+                html.body().getElementsByTag("center").remove();
+                String text = html.body().html();
+                text = text.replaceFirst("<br>", "");
+                text = text.replaceFirst("<br>", "");
+                //0500105X
+//                ArrayList<String> list = new ArrayList<>();
+//                for(int pos = 0; pos < text.length(); pos++){
+//                    pos = text.indexOf(getString(R.string.string_course_code));
+//                    String tmp = text.substring(pos + 5, 8);
+//                    list.add(tmp);
+//                }
+                CourseAssistant.getInstance().clear();
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(Jsoup.parse(success).title())
-                        .setMessage(Jsoup.parse(success).body().text())
+                        .setTitle(R.string.submit_result_title)
+                        .setMessage(Html.fromHtml(text))
                         .show();
             }
             task = null;

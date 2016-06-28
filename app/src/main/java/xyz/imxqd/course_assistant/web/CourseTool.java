@@ -172,7 +172,7 @@ public class CourseTool {
         return null;
     }
 
-    public static String submit(HashMap<String, String> data) throws IOException {
+    public static Document submit(HashMap<String, String> data) throws IOException {
         Document doc;
         Connection conn = Jsoup.connect(SUBMIT_URL)
                 .cookies(cookie);
@@ -183,7 +183,7 @@ public class CourseTool {
             conn.data("jxbh", entry.getValue());
         }
         doc = conn.post();
-        return doc.html();
+        return doc;
     }
 
 }

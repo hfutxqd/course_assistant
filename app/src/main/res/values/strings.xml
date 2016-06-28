@@ -41,4 +41,9 @@
     <string name="string_get_data_failed">获取数据失败,可能选课时间未到或登陆信息失效</string>
     <string name="string_confirm">确定</string>
     <string name="string_cancel">取消</string>
+    <string name="submit_result_title">提交结果</string>
+    <string name="string_course_code">课程代码：</string>
+    <string name="action_help">帮助</string>
+    <string name="help_dialog_title">操作说明</string>
+    <string name="help_dialog_message">在已选课程界面,长按可移除已选课程\n在等待提交界面,滑动或者长按都可以删除该课程</string>
 </resources>
