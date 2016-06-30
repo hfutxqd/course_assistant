@@ -27,6 +27,7 @@ public class LoginDialog {
     private Context context;
     View content;
     CheckBox checkBox;
+    CheckBox campusCheck;
     LoginTask task = null;
     public LoginDialog(Context context)
     {
@@ -36,7 +37,8 @@ public class LoginDialog {
         {
             String sno = data.getString("sno", "");
             String pwd = data.getString("pwd", "");
-            task = new LoginTask(sno, pwd);
+            boolean isXuancheng = data.getBoolean("isXuancheng", false);
+            task = new LoginTask(sno, pwd, isXuancheng);
             task.execute();
         }else {
             dialogCreate();
@@ -49,6 +51,7 @@ public class LoginDialog {
         content = LayoutInflater.from(context)
                 .inflate(R.layout.login_dialog_content, null);
         checkBox = (CheckBox) content.findViewById(R.id.checkBox);
+        campusCheck = (CheckBox) content.findViewById(R.id.campusCheck);
         builder = new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.login_title_string))
                 .setView(content)
@@ -89,6 +92,7 @@ public class LoginDialog {
         int errorCode = 0;
         String sno, pwd;
         boolean auto = false;
+        boolean isXuancheng = false;
         ProgressDialog progressDialog;
         public LoginTask()
         {
@@ -97,9 +101,10 @@ public class LoginDialog {
             sno = snoView.getText().toString();
             pwd = pwdView.getText().toString();
             auto = checkBox.isChecked();
+            isXuancheng = campusCheck.isChecked();
         }
 
-        public LoginTask(String sno, String pwd)
+        public LoginTask(String sno, String pwd, boolean isXuancheng)
         {
             if(builder == null)
             {
@@ -107,6 +112,7 @@ public class LoginDialog {
             }
             this.sno = sno;
             this.pwd = pwd;
+            this.isXuancheng = isXuancheng;
             auto = true;
         }
 
@@ -119,7 +125,7 @@ public class LoginDialog {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                if(CourseTool.login(sno, pwd))
+                if(CourseTool.login(sno, pwd, isXuancheng))
                 {
                     return true;
                 }
@@ -141,6 +147,7 @@ public class LoginDialog {
                         .putString("sno", sno)
                         .putString("pwd", pwd)
                         .putBoolean("auto", auto)
+                        .putBoolean("isXuancheng", isXuancheng)
                         .apply();
                 if(callBack != null)
                 {

@@ -15,7 +15,7 @@
     <string name="loading_string">正在加载</string>
     <string name="loggingin_string">正在登录</string>
     <string name="loggingin_wait_string">正在登录</string>
-    <string name="login_hint">请使用信息门户账号登录</string>
+    <string name="login_hint">合肥校区使用信息门户账号登录\n宣传校区使用教学管理系统账号登录</string>
     <string name="login_success_string">登录成功</string>
     <string name="login_title_string">登录</string>
     <string name="network_error_string">网络或服务器出错</string>
@@ -46,4 +46,6 @@
     <string name="action_help">帮助</string>
     <string name="help_dialog_title">操作说明</string>
     <string name="help_dialog_message">在已选课程界面,长按可移除已选课程\n在等待提交界面,滑动或者长按都可以删除该课程</string>
+    <string name="xuancheng_campus">宣城校区</string>
+    <string name="login_failed_string">登录信息错误</string>
 </resources>

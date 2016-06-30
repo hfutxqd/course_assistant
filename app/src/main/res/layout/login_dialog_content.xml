@@ -48,6 +48,11 @@
             android:layout_height="wrap_content"
             android:text="@string/auto_login_string"
             android:id="@+id/checkBox" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/xuancheng_campus"
+            android:id="@+id/campusCheck" />
         <TextView
             android:text="@string/login_hint"
             android:layout_margin="8dp"
