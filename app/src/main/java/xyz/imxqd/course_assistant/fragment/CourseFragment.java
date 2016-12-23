@@ -30,13 +30,12 @@ import xyz.imxqd.course_assistant.web.CourseTool;
 
 /**
  * Created by imxqd on 2016/3/3.
- *
  */
 public class CourseFragment extends Fragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
-    public CourseFragment()
-    {
+    public CourseFragment() {
 
     }
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -62,11 +61,9 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
         return rootView;
     }
 
-    public void loadData()
-    {
+    public void loadData() {
         CourseTool.CourseType courseType;
-        switch (spinner.getSelectedItemPosition())
-        {
+        switch (spinner.getSelectedItemPosition()) {
             case 0:
                 courseType = CourseTool.CourseType.Optional;
                 break;
@@ -82,6 +79,7 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
         task = new GetCourseTask(courseType);
         task.execute();
     }
+
     GetCourseTask task = null;
 
     @Override
@@ -97,10 +95,10 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         CourseItem item = (CourseItem) adapter.getItem(position);
-        Fragment fragmentTo =  ClassroomFragment.newInstance(item.getCourseCode());
+        Fragment fragmentTo = ClassroomFragment.newInstance(item.getCourseCode());
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.courseContainer,fragmentTo, "ClassroomFragment")
+                .replace(R.id.courseContainer, fragmentTo, "ClassroomFragment")
                 .addToBackStack("ClassroomFragment")
                 .commit();
     }
@@ -108,30 +106,28 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(getActivity() != null && isVisibleToUser)
-        {
-            if(getFragmentManager().findFragmentByTag("ClassroomFragment") != null)
-            {
-                ((MainActivity)getActivity()).setHomeAsUp(true);
-            }else {
-                ((MainActivity)getActivity()).setHomeAsUp(false);
+        if (getActivity() != null && isVisibleToUser) {
+            if (getFragmentManager().findFragmentByTag("ClassroomFragment") != null) {
+                ((MainActivity) getActivity()).setHomeAsUp(true);
+            } else {
+                ((MainActivity) getActivity()).setHomeAsUp(false);
             }
         }
     }
 
 
-
-    class GetCourseTask extends AsyncTask<Void, Void, Boolean>
-    {
+    class GetCourseTask extends AsyncTask<Void, Void, Boolean> {
         CourseTool.CourseType courseType;
-        public GetCourseTask(CourseTool.CourseType type)
-        {
+
+        public GetCourseTask(CourseTool.CourseType type) {
             courseType = type;
         }
+
         ProgressDialog progressDialog;
+
         @Override
         protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(getContext(),getString(R.string.loading_string),
+            progressDialog = ProgressDialog.show(getContext(), getString(R.string.loading_string),
                     getString(R.string.loading_string));
         }
 
@@ -139,8 +135,7 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
         protected Boolean doInBackground(Void... params) {
             try {
                 ArrayList<CourseItem> list = CourseTool.getCourseList(courseType);
-                if(list != null)
-                {
+                if (list != null) {
                     adapter.setList(list);
                     return true;
                 }
@@ -153,13 +148,11 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
 
         @Override
         protected void onPostExecute(Boolean success) {
-            if(success)
-            {
+            if (success) {
                 adapter.notifyDataSetChanged();
-            }else {
-                if(CourseTool.studentNo != null)
-                {
-                    Toast.makeText(getContext(), getString(R.string.network_error_string),Toast.LENGTH_SHORT).show();
+            } else {
+                if (CourseTool.studentNo != null) {
+                    Toast.makeText(getContext(), getString(R.string.network_error_string), Toast.LENGTH_SHORT).show();
                 }
             }
             progressDialog.dismiss();

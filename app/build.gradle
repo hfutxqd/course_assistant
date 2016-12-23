@@ -1,25 +1,50 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    signingConfigs {
+        config_release {
+            File configFile = new File('/Android/signing.cfg')
+            Scanner scanner = new Scanner(configFile)
+            String storeFilePath = scanner.nextLine()
+            String kAlias = scanner.nextLine()
+            String kPwd = scanner.nextLine()
+            String sPwd = scanner.nextLine()
+            scanner.close()
+            keyAlias kAlias
+            keyPassword kPwd
+            storeFile file(storeFilePath)
+            storePassword sPwd
+        }
+    }
+
 
     defaultConfig {
         applicationId "xyz.imxqd.course_assistant"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 4
         versionName "1.3"
+        signingConfig signingConfigs.config_release
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config_release
+            zipAlignEnabled true
+        }
+        debug {
+            signingConfig signingConfigs.config_release
+            minifyEnabled false
+            zipAlignEnabled true
         }
     }}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
 }
