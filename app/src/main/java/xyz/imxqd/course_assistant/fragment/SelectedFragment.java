@@ -1,12 +1,12 @@
 package xyz.imxqd.course_assistant.fragment;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +26,10 @@ import xyz.imxqd.course_assistant.web.CourseTool;
 /**
  * Created by imxqd on 2016/3/2.
  * 已选中的课程
- *
  */
 public class SelectedFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String TAG = "SelectedFragment";
     private SwipeRefreshLayout swipeLayout;
     private ListView listView;
     private SelectedAdapter adapter;
@@ -38,6 +38,7 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
     public SelectedFragment() {
         adapter = new SelectedAdapter();
     }
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -84,8 +85,8 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
                         CourseAssistant.getInstance().remove(item.getCourseCode());
                     }
                 })
-        .setNegativeButton(getString(R.string.remove_confirm_button_negative_string), null)
-        .show();
+                .setNegativeButton(getString(R.string.remove_confirm_button_negative_string), null)
+                .show();
         return true;
     }
 
@@ -94,8 +95,7 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
         loadData();
     }
 
-    class GetSelectedTask extends AsyncTask<Void, Void, Boolean>
-    {
+    class GetSelectedTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {
             swipeLayout.setRefreshing(true);
@@ -103,10 +103,10 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            Log.d(TAG, "获取已选课程...");
             try {
                 ArrayList<SelectItem> list = CourseTool.getSelected();
-                if(list != null)
-                {
+                if (list != null) {
                     adapter.setList(list);
                     CourseAssistant.getInstance().setSelected(list);
                     return true;
@@ -120,10 +120,11 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
 
         @Override
         protected void onPostExecute(Boolean success) {
-            if(success)
-            {
+            if (success) {
+                Log.d(TAG, "获取已选课程成功.");
                 adapter.notifyDataSetChanged();
-            }else {
+            } else {
+                Log.d(TAG, "获取已选课程失败.");
                 Toast.makeText(getContext(), "获取数据失败,请尝试重新登录", Toast.LENGTH_SHORT).show();
             }
             swipeLayout.setRefreshing(false);
@@ -131,9 +132,10 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
         }
     }
 
-    public void loadData()
-    {
-        task = new GetSelectedTask();
-        task.execute();
+    public void loadData() {
+        if (CourseAssistant.get().isLoggedIn()) {
+            task = new GetSelectedTask();
+            task.execute();
+        }
     }
 }

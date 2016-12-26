@@ -114,7 +114,7 @@ public class CourseTool {
                     .cookies(cookie)
                     .get();
             Log.d("http get", baseUrl + SELECTED_URL);
-            Log.d("getSelected", doc.toString());
+            Log.d("getSelected", doc.html());
             Element tbody = doc.getElementById("TableXKJG").child(0);
             ArrayList<SelectItem> list = new ArrayList<>();
             for (int i = 1; i < tbody.children().size(); i++) {
