@@ -265,9 +265,8 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     public void submit() {
         if (CourseTool.cookie != null && CourseTool.studentNo != null) {
-            new AlertDialog.Builder(this)
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(R.string.submit_confirm_title)
-                    .setAdapter(new ConfirmListAdapter(), null)
                     .setNegativeButton(R.string.string_cancel, null)
                     .setPositiveButton(R.string.string_confirm, new DialogInterface.OnClickListener() {
                         @Override
@@ -275,8 +274,15 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
                             task = new SubmitTask();
                             task.execute();
                         }
-                    })
-                    .show();
+                    });
+            ConfirmListAdapter adapter = new ConfirmListAdapter();
+            if (adapter.getCount() == 0) {
+                builder.setMessage(R.string.empty_to_submit);
+            } else {
+                builder.setAdapter(adapter, null);
+            }
+
+            builder.show();
         }
     }
 

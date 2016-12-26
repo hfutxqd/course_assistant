@@ -25,7 +25,6 @@ public class SelectedAdapter extends BaseAdapter {
     }
     public void setList(ArrayList<SelectItem> li)
     {
-        System.out.println("sssssssssssss  " + li);
         list.clear();
         list.addAll(li);
     }
