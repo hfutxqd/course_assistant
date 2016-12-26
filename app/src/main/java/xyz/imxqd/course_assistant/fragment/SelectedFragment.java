@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +25,15 @@ import xyz.imxqd.course_assistant.web.CourseTool;
 
 /**
  * Created by imxqd on 2016/3/2.
+ * 已选中的课程
  *
  */
-public class SelectedFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class SelectedFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
+
+    private SwipeRefreshLayout swipeLayout;
+    private ListView listView;
+    private SelectedAdapter adapter;
+    private GetSelectedTask task = null;
 
     public SelectedFragment()
     {
@@ -45,15 +52,17 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_selected, container, false);
-        ListView listView = (ListView) rootView.findViewById(R.id.selected_list);
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_layout);
+        listView = (ListView) rootView.findViewById(R.id.selected_list);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
         adapter = new SelectedAdapter();
         listView.setAdapter(adapter);
+        listView.setEmptyView(rootView.findViewById(R.id.no_new_submit_data));
+        swipeLayout.setOnRefreshListener(this);
         return rootView;
     }
-    SelectedAdapter adapter;
-    GetSelectedTask task = null;
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -80,13 +89,16 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
         return true;
     }
 
+    @Override
+    public void onRefresh() {
+        loadData();
+    }
+
     class GetSelectedTask extends AsyncTask<Void, Void, Boolean>
     {
-        ProgressDialog progressDialog;
         @Override
         protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(getContext(),getString(R.string.loading_string),
-                    getString(R.string.loading_string));
+            swipeLayout.setRefreshing(true);
         }
 
         @Override
@@ -114,9 +126,8 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
             }else {
                 Toast.makeText(getContext(), "获取数据失败,请尝试重新登录", Toast.LENGTH_SHORT).show();
             }
-            progressDialog.dismiss();
+            swipeLayout.setRefreshing(false);
             task = null;
-            super.onPostExecute(success);
         }
     }
 

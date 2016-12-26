@@ -32,7 +32,7 @@ public class LoginDialog {
     public LoginDialog(Context context)
     {
         this.context = context;
-        SharedPreferences data = context.getSharedPreferences("user", 1);
+        SharedPreferences data = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         if(data.getBoolean("auto", false))
         {
             String sno = data.getString("sno", "");
@@ -142,8 +142,8 @@ public class LoginDialog {
             if(success)
             {
                 Toast.makeText(context, context.getString(R.string.login_success_string),Toast.LENGTH_SHORT).show();
-                SharedPreferences sharedata = context.getSharedPreferences("user", 1);
-                sharedata.edit()
+                SharedPreferences sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+                sp.edit()
                         .putString("sno", sno)
                         .putString("pwd", pwd)
                         .putBoolean("auto", auto)
