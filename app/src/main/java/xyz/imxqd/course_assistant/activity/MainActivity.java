@@ -1,6 +1,7 @@
 package xyz.imxqd.course_assistant.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
                     .show();
             return true;
         } else if (id == R.id.action_swich_user) {
-            SharedPreferences preferences = getSharedPreferences("user", 1);
+            SharedPreferences preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
             preferences.edit()
                     .putBoolean("auto", false)
                     .apply();
