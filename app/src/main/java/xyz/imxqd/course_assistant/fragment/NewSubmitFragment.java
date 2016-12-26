@@ -2,7 +2,6 @@ package xyz.imxqd.course_assistant.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import xyz.imxqd.course_assistant.R;
 import xyz.imxqd.course_assistant.activity.MainActivity;
 import xyz.imxqd.course_assistant.adapter.NewSubmitAdapter;
 import xyz.imxqd.course_assistant.application.CourseAssistant;
-import xyz.imxqd.course_assistant.customListener.SwipeDismissListViewTouchListener;
 import xyz.imxqd.course_assistant.model.Classroom;
 
 /**
@@ -40,27 +38,6 @@ public class NewSubmitFragment extends Fragment implements AdapterView.OnItemLon
         ListView listView = (ListView) rootView.findViewById(R.id.selected_list);
         listView.setEmptyView(rootView.findViewById(R.id.no_new_submit_data));
         listView.setOnItemLongClickListener(this);
-        SwipeDismissListViewTouchListener touchListener =
-                new SwipeDismissListViewTouchListener(listView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
-                    @Override
-                    public boolean canDismiss(int position) {
-                        return true;
-                    }
-
-                    @Override
-                    public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                        for (int position : reverseSortedPositions) {
-                            adapter.remove(position);
-                            CourseAssistant assistant = CourseAssistant.getInstance();
-                            ((MainActivity)getActivity()).setBadgeCount(assistant.getNewSubmitMap().size());
-                        }
-                    }
-                });
-
-        listView.setOnTouchListener(touchListener);
-        listView.setOnScrollListener(touchListener.makeScrollListener());
-
-
         adapter = new NewSubmitAdapter();
         listView.setAdapter(adapter);
         return rootView;
