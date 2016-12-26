@@ -39,6 +39,7 @@ import xyz.imxqd.course_assistant.application.CourseAssistant;
 import xyz.imxqd.course_assistant.fragment.CourseFragment;
 import xyz.imxqd.course_assistant.fragment.NewSubmitFragment;
 import xyz.imxqd.course_assistant.fragment.SelectedFragment;
+import xyz.imxqd.course_assistant.model.Constants;
 import xyz.imxqd.course_assistant.view.BadgeView;
 import xyz.imxqd.course_assistant.view.LoginDialog;
 import xyz.imxqd.course_assistant.web.CourseTool;
@@ -69,7 +70,9 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
     @Override
     protected void onResume() {
         super.onResume();
-        login();
+        if (System.currentTimeMillis() - CourseAssistant.mLastLoginTime > Constants.LOGIN_SESSION_TIMEOUT) {
+            login();
+        }
     }
 
     @Override

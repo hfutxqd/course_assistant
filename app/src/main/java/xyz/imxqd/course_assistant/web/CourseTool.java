@@ -22,7 +22,6 @@ import xyz.imxqd.course_assistant.model.SelectItem;
 
 /**
  * Created by imxqd on 2016/3/2.
- *
  */
 public class CourseTool {
     //                                               http://222.195.8.201/pass.asp
@@ -41,34 +40,33 @@ public class CourseTool {
     public static Map<String, String> cookie = null;
     public static String studentNo = null;
     public static String baseUrl = BASE_URL_HEFEI;
-    public static boolean login(String sno, String pwd) throws IOException {
+
+    private static boolean login(String sno, String pwd) throws IOException {
         baseUrl = BASE_URL_HEFEI;
         HashMap<String, String> login_data = new HashMap<>();
         login_data.put("IDToken0", "");
         login_data.put("IDToken1", sno);
-        login_data.put("IDToken2",pwd);
-        Connection.Response response =  Jsoup.connect(LOGIN_HEFEI_URL)
+        login_data.put("IDToken2", pwd);
+        Connection.Response response = Jsoup.connect(LOGIN_HEFEI_URL)
                 .userAgent("Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)")
                 .timeout(20000)
                 .data(login_data)
                 .execute();
         cookie = response.cookies();
         Document doc = response.parse();
-        if(doc.text().contains("failed"))
-        {
+        if (doc.text().contains("failed")) {
             cookie = null;
             return false;
-        }else {
+        } else {
             Connection.Response response2 = Jsoup.connect(LOGIN_HEFEI_URL2)
                     .cookies(cookie)
                     .execute();
             cookie = response2.cookies();
             Document doc2 = response2.parse();
-            if(doc2.location().endsWith("s_index.htm"))
-            {
+            if (doc2.location().endsWith("s_index.htm")) {
                 studentNo = sno;
                 return true;
-            }else {
+            } else {
                 cookie = null;
             }
         }
@@ -76,7 +74,8 @@ public class CourseTool {
     }
 
     public static boolean login(String sno, String pwd, boolean isXuancheng) throws IOException {
-        if(isXuancheng) {
+        CourseAssistant.mLastLoginTime = System.currentTimeMillis();
+        if (isXuancheng) {
             baseUrl = BASE_URL_XUANCHENG;
             HashMap<String, String> login_data = new HashMap<>();
             login_data.put("UserStyle", "student");
@@ -100,14 +99,13 @@ public class CourseTool {
             }
             studentNo = sno;
             return cookie != null;
-        }else {
+        } else {
             return login(sno, pwd);
         }
     }
 
     public static ArrayList<SelectItem> getSelected() throws IOException {
-        if(cookie != null)
-        {
+        if (cookie != null) {
             Document doc = Jsoup.connect(baseUrl + SELECTED_URL)
                     .cookies(cookie)
                     .get();
@@ -115,11 +113,9 @@ public class CourseTool {
             Log.d("getSelected", doc.toString());
             Element tbody = doc.getElementById("TableXKJG").child(0);
             ArrayList<SelectItem> list = new ArrayList<>();
-            for(int i = 1; i < tbody.children().size(); i++)
-            {
+            for (int i = 1; i < tbody.children().size(); i++) {
                 Element item = tbody.child(i);
-                if(item.tagName().equals("script"))
-                {
+                if (item.tagName().equals("script")) {
                     continue;
                 }
                 SelectItem selectItem = new SelectItem();
@@ -135,16 +131,16 @@ public class CourseTool {
         }
         return null;
     }
-    public enum CourseType
-    {
+
+    public enum CourseType {
         Optional,
         Required,
         Planed
     }
+
     public static ArrayList<CourseItem> getCourseList(CourseType type) throws IOException {
         String URL = baseUrl + ALL_URL + "?kclx=";
-        switch (type)
-        {
+        switch (type) {
             case Optional:
                 URL += "x";
                 break;
@@ -155,7 +151,7 @@ public class CourseTool {
                 URL += "jh";
                 break;
         }
-        if(cookie != null) {
+        if (cookie != null) {
             Document doc;
             doc = Jsoup.connect(URL)
                     .cookies(cookie)
@@ -163,12 +159,10 @@ public class CourseTool {
             Log.d("http get", URL);
             Log.d("getCourseList", doc.toString());
             Element kcTable = doc.getElementById("KCTable");
-            if(kcTable.children().size() > 0)
-            {
+            if (kcTable.children().size() > 0) {
                 Element tbody = kcTable.child(0);
                 ArrayList<CourseItem> list = new ArrayList<>();
-                for(Element i: tbody.children())
-                {
+                for (Element i : tbody.children()) {
                     CourseItem item = new CourseItem();
                     item.setCourseCode(i.child(0).text());
                     item.setCourseName(i.child(1).text());
@@ -185,8 +179,7 @@ public class CourseTool {
     }
 
     public static ArrayList<Classroom> getClassList(String kcdm) throws IOException {
-        if(cookie != null)
-        {
+        if (cookie != null) {
             ArrayList<Classroom> list = new ArrayList<>();
             Document doc;
             doc = Jsoup.connect(baseUrl + CLASSES_URL + kcdm)
@@ -195,10 +188,9 @@ public class CourseTool {
             Log.d("http get", baseUrl + CLASSES_URL + kcdm);
             Log.d("getClassList", doc.toString());
             Element JXBTable = doc.getElementById("JXBTable");
-            if(JXBTable != null && JXBTable.children().size() > 0){
+            if (JXBTable != null && JXBTable.children().size() > 0) {
                 Element tbody = JXBTable.child(0);
-                for (Element i: tbody.children())
-                {
+                for (Element i : tbody.children()) {
                     Classroom item = new Classroom(kcdm);
                     item.setCourseName(i.child(0).text());
                     String htmlStr = i.child(1).attr("alt");
@@ -229,7 +221,7 @@ public class CourseTool {
         Connection conn = Jsoup.connect(baseUrl + SUBMIT_URL)
                 .cookies(cookie);
         conn.data("xh", studentNo);
-        Set<Map.Entry<String, String>> set =  data.entrySet();
+        Set<Map.Entry<String, String>> set = data.entrySet();
         for (Map.Entry<String, String> entry : set) {
             conn.data("kcdm", entry.getKey());
             conn.data("jxbh", entry.getValue());
