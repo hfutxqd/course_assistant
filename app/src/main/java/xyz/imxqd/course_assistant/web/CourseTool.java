@@ -43,6 +43,7 @@ public class CourseTool {
 
     private static boolean login(String sno, String pwd) throws IOException {
         baseUrl = BASE_URL_HEFEI;
+        CourseAssistant.get().setLoggedIn(false);
         HashMap<String, String> login_data = new HashMap<>();
         login_data.put("IDToken0", "");
         login_data.put("IDToken1", sno);
@@ -65,6 +66,7 @@ public class CourseTool {
             Document doc2 = response2.parse();
             if (doc2.location().endsWith("s_index.htm")) {
                 studentNo = sno;
+                CourseAssistant.get().setLoggedIn(true);
                 return true;
             } else {
                 cookie = null;
@@ -98,7 +100,9 @@ public class CourseTool {
                 return false;
             }
             studentNo = sno;
-            return cookie != null;
+            boolean success = cookie != null;
+            CourseAssistant.get().setLoggedIn(success);
+            return success;
         } else {
             return login(sno, pwd);
         }

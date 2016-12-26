@@ -1,15 +1,12 @@
 package xyz.imxqd.course_assistant.fragment;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -21,25 +18,19 @@ import java.util.ArrayList;
 import xyz.imxqd.course_assistant.R;
 import xyz.imxqd.course_assistant.activity.MainActivity;
 import xyz.imxqd.course_assistant.adapter.CourseAdapter;
-import xyz.imxqd.course_assistant.adapter.SelectedAdapter;
-import xyz.imxqd.course_assistant.model.ClassesItem;
-import xyz.imxqd.course_assistant.model.Classroom;
+import xyz.imxqd.course_assistant.application.CourseAssistant;
 import xyz.imxqd.course_assistant.model.CourseItem;
-import xyz.imxqd.course_assistant.model.SelectItem;
 import xyz.imxqd.course_assistant.web.CourseTool;
 
 /**
  * Created by imxqd on 2016/3/3.
+ * 选课主界面
  */
 public class CourseFragment extends Fragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     public CourseFragment() {
 
     }
 
-    /**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     */
     public static CourseFragment newInstance() {
         CourseFragment fragment = new CourseFragment();
         return fragment;
@@ -62,6 +53,9 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     public void loadData() {
+        if(!CourseAssistant.get().isLoggedIn()) {
+            return;
+        }
         CourseTool.CourseType courseType;
         switch (spinner.getSelectedItemPosition()) {
             case 0:

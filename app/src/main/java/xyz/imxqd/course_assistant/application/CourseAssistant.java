@@ -15,6 +15,8 @@ import xyz.imxqd.course_assistant.model.SelectItem;
 public class CourseAssistant extends Application {
     public static long mLastLoginTime = 0;
 
+    private boolean isLoggedIn = false;
+
     private static CourseAssistant courseAssistant;
     private HashMap<String, String> toSubmitMap;//将要提交的课程,用于提交
     private HashMap<String, String> newSubmitMap;//新提交的课程,用于提交
@@ -31,6 +33,18 @@ public class CourseAssistant extends Application {
         newSubmitMap = new HashMap<>();
         newSubmitClassroomMap = new HashMap<>();
         super.onCreate();
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
+    public static CourseAssistant get() {
+        return courseAssistant;
     }
 
     public void setNewSubmitAdapter(NewSubmitAdapter adapter) {
