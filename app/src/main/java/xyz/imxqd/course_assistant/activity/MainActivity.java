@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,26 +42,15 @@ import xyz.imxqd.course_assistant.view.BadgeView;
 import xyz.imxqd.course_assistant.view.LoginDialog;
 import xyz.imxqd.course_assistant.web.CourseTool;
 
-public class MainActivity extends AppCompatActivity implements LoginDialog.LoginCallBack, ViewPager.OnPageChangeListener{
+public class MainActivity extends AppCompatActivity implements LoginDialog.LoginCallBack, ViewPager.OnPageChangeListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private BadgeView badgeView = null;
     private TabLayout tabLayout;
     private FloatingActionButton fab;
-    private Fragment  selected, course, selecting;
+    private Fragment selected, course, selecting;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,20 +73,14 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_help) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.help_dialog_title)
@@ -104,15 +88,13 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
                     .setPositiveButton(R.string.string_confirm, null)
                     .show();
             return true;
-        }else if(id == R.id.action_swich_user)
-        {
+        } else if (id == R.id.action_swich_user) {
             SharedPreferences preferences = getSharedPreferences("user", 1);
             preferences.edit()
                     .putBoolean("auto", false)
                     .apply();
             login();
-        }else if(id == android.R.id.home)
-        {
+        } else if (id == android.R.id.home) {
             onBackPressed();
         }
 
@@ -120,19 +102,8 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
     }
 
 
-    @Override
-    protected void onDestroy() {
-
-        super.onDestroy();
-    }
-
-    public void initViewPage()
-    {
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+    public void initViewPage() {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
@@ -142,15 +113,13 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    public void initFragments()
-    {
+    public void initFragments() {
         selected = SelectedFragment.newInstance();
         course = CourseFragment.newInstance();
         selecting = NewSubmitFragment.newInstance();
     }
 
-    public void initFab()
-    {
+    public void initFab() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,16 +130,13 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         fab.hide();
     }
 
-    public void initBadgeView()
-    {
+    public void initBadgeView() {
         TabLayout.Tab tab = tabLayout.getTabAt(2);
         View view = LayoutInflater.from(this).inflate(R.layout.tab_title_layout, null);
         ((TextView) view.findViewById(R.id.tv_title)).setText(mSectionsPagerAdapter.getPageTitle(2));
-        if(tab != null)
-        {
+        if (tab != null) {
             tab.setCustomView(view);
-            if(badgeView == null)
-            {
+            if (badgeView == null) {
                 badgeView = new BadgeView(this);
             }
             badgeView.setTargetView(view);
@@ -178,11 +144,12 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
             setBadgeCount(assistant.getNewSubmitMap().size());
         }
     }
+
     int current_page = 0;
+
     @Override
     public void onBackPressed() {
-        if(current_page == 0 || current_page == 2)
-        {
+        if (current_page == 0 || current_page == 2) {
             finish();
             return;
         }
@@ -191,8 +158,8 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     @Override
     public void onSuccess() {
-        ((SelectedFragment)selected).loadData();
-        ((CourseFragment)course).loadData();
+        ((SelectedFragment) selected).loadData();
+        ((CourseFragment) course).loadData();
     }
 
     @Override
@@ -214,8 +181,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     @Override
     public void onPageSelected(int position) {
-        switch (position)
-        {
+        switch (position) {
             case 0:
                 fab.hide();
                 setHomeAsUp(false);
@@ -247,8 +213,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
         @Override
         public Fragment getItem(int position) {
-            switch (position)
-            {
+            switch (position) {
                 case 0:
                     return selected;
                 case 1:
@@ -278,28 +243,24 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         }
     }
 
-    public void setHomeAsUp(boolean enable)
-    {
-        if(getSupportActionBar() != null)
-        {
+    public void setHomeAsUp(boolean enable) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(enable);
         }
 
     }
 
-    public void setBadgeCount(int count)
-    {
+    public void setBadgeCount(int count) {
         badgeView.setBadgeCount(count);
     }
 
-    public void login()
-    {
+    public void login() {
         LoginDialog dialog = new LoginDialog(this);
         dialog.setCallBack(this);
     }
 
     public void submit() {
-        if(CourseTool.cookie != null && CourseTool.studentNo != null) {
+        if (CourseTool.cookie != null && CourseTool.studentNo != null) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.submit_confirm_title)
                     .setAdapter(new ConfirmListAdapter(), null)
@@ -319,9 +280,10 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     class SubmitTask extends AsyncTask<Void, Void, Document> {
         ProgressDialog progressDialog;
+
         @Override
         protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(MainActivity.this,getString(R.string.loading_string),
+            progressDialog = ProgressDialog.show(MainActivity.this, getString(R.string.loading_string),
                     getString(R.string.loading_string));
         }
 
@@ -339,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         @Override
         protected void onPostExecute(Document html) {
             progressDialog.dismiss();
-            if(html != null) {
+            if (html != null) {
                 html.body().getElementsByTag("div").remove();
                 html.body().getElementsByTag("center").remove();
                 String text = html.body().html();
@@ -352,10 +314,22 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 //                    String tmp = text.substring(pos + 5, 8);
 //                    list.add(tmp);
 //                }
-                CourseAssistant.getInstance().clear();
+
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle(R.string.submit_result_title)
-                        .setMessage(Html.fromHtml(text))
+                        .setMessage(Html.fromHtml(text + "<br/>请<b>根据结果</b>选择以下操作："))
+                        .setPositiveButton(R.string.action_clear, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                CourseAssistant.getInstance().clear();
+                                NewSubmitFragment n = (NewSubmitFragment) selecting;
+                                n.updateUI();
+                                setBadgeCount(0);
+                                SelectedFragment s = (SelectedFragment) selected;
+                                s.onRefresh();
+                            }
+                        })
+                        .setNegativeButton(R.string.action_cancel, null)
                         .show();
             }
             task = null;

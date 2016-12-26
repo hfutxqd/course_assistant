@@ -10,7 +10,15 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="xyz.imxqd.course_assistant.activity.MainActivity">
+    tools:context="xyz.imxqd.course_assistant.activity.MainActivity" >
+    <TextView
+        android:id="@+id/no_selected"
+        android:text="@string/no_selected"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
@@ -19,13 +27,10 @@
             android:id="@+id/selected_list"
             android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
+
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <TextView
-        android:id="@+id/no_new_submit_data"
-        android:text="@string/no_new_submit_data"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
 </LinearLayout>

@@ -32,11 +32,11 @@ public class NewSubmitFragment extends Fragment implements AdapterView.OnItemLon
         return new NewSubmitFragment();
     }
 
-    NewSubmitAdapter adapter;
+    private NewSubmitAdapter adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_selected, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_new_submit, container, false);
         ListView listView = (ListView) rootView.findViewById(R.id.selected_list);
         listView.setEmptyView(rootView.findViewById(R.id.no_new_submit_data));
         listView.setOnItemLongClickListener(this);
@@ -64,6 +64,11 @@ public class NewSubmitFragment extends Fragment implements AdapterView.OnItemLon
         adapter = new NewSubmitAdapter();
         listView.setAdapter(adapter);
         return rootView;
+    }
+
+    public void updateUI() {
+        adapter.update();
+        adapter.notifyDataSetChanged();
     }
 
     @Override

@@ -48,4 +48,7 @@
     <string name="help_dialog_message">在已选课程界面,长按可移除已选课程\n在等待提交界面,滑动或者长按都可以删除该课程</string>
     <string name="xuancheng_campus">宣城校区</string>
     <string name="login_failed_string">登录信息错误</string>
+    <string name="no_selected">当前没有已经选中的课程</string>
+    <string name="action_clear">选课成功，清除缓存</string>
+    <string name="action_cancel">不清除缓存，稍后重试</string>
 </resources>

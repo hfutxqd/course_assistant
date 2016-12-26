@@ -35,9 +35,8 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
     private SelectedAdapter adapter;
     private GetSelectedTask task = null;
 
-    public SelectedFragment()
-    {
-
+    public SelectedFragment() {
+        adapter = new SelectedAdapter();
     }
     /**
      * Returns a new instance of this fragment for the given section
@@ -54,11 +53,12 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
         View rootView = inflater.inflate(R.layout.fragment_selected, container, false);
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_layout);
         listView = (ListView) rootView.findViewById(R.id.selected_list);
+        listView.setEmptyView(rootView.findViewById(R.id.no_selected));
+
+        listView.setAdapter(adapter);
+
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
-        adapter = new SelectedAdapter();
-        listView.setAdapter(adapter);
-        listView.setEmptyView(rootView.findViewById(R.id.no_new_submit_data));
         swipeLayout.setOnRefreshListener(this);
         return rootView;
     }
