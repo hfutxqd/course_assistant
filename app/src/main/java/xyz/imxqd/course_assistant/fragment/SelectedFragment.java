@@ -1,5 +1,6 @@
 package xyz.imxqd.course_assistant.fragment;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -72,7 +73,9 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        getMembersTask = new GetMembersTask();
+        SelectItem item = (SelectItem) adapter.getItem(position);
+        getMembersTask.execute(CourseTool.xqValue, item.getCourseCode(), item.getClassNo());
     }
 
     @Override
@@ -135,6 +138,45 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
             }
             swipeLayout.setRefreshing(false);
             task = null;
+        }
+    }
+
+    GetMembersTask getMembersTask = null;
+    class GetMembersTask extends AsyncTask<String, Void, ArrayList<String>> {
+        ProgressDialog dialog;
+        @Override
+        protected void onPreExecute() {
+            dialog = ProgressDialog.show(getContext(),
+                    getString(R.string.loading_string),
+                    getString(R.string.loading_string));
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(String... params) {
+            Log.d(TAG, "获取教学班成员...");
+            return CourseTool.getMembers(params[0], params[1], params[2]);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> list) {
+            dialog.dismiss();
+            if (list != null) {
+                Log.d(TAG, "获取教学班成员成功.");
+                StringBuilder str = new StringBuilder();
+                for (String s : list) {
+                    str.append(s);
+                    str.append("\n");
+                }
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.classroom_members)
+                        .setMessage(str)
+                        .setPositiveButton(R.string.string_confirm, null)
+                        .show();
+            } else {
+                Log.d(TAG, "获取教学班成员失败.");
+                Toast.makeText(getContext(), "获取教学班成员失败", Toast.LENGTH_SHORT).show();
+            }
+            getMembersTask = null;
         }
     }
 

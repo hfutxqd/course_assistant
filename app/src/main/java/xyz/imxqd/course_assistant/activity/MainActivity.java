@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -168,6 +169,10 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         } else if ("2013214407".equals(CourseTool.studentNo)) {
             MyToast.myTosat(this, R.drawable.img1, 3000);
         }
+        if (CourseTool.xqName == null) {
+            Toast.makeText(this, "当前可能没有开放选课!", Toast.LENGTH_SHORT).show();
+        }
+
         ((SelectedFragment) selected).loadData();
         ((CourseFragment) course).loadData();
     }

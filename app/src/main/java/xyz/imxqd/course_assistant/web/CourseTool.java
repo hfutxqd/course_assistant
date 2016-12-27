@@ -6,10 +6,10 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,21 +25,28 @@ import xyz.imxqd.course_assistant.model.SelectItem;
  */
 public class CourseTool {
     //                                               http://222.195.8.201/pass.asp
-    public static final String BASE_URL_XUANCHENG = "http://222.195.8.201/";
-    public static final String BASE_URL_HEFEI = "http://bkjw.hfut.edu.cn/";
+    private static final String BASE_URL_XUANCHENG = "http://222.195.8.201/";
+    private static final String BASE_URL_HEFEI = "http://bkjw.hfut.edu.cn/";
 
-    public static final String LOGIN_HEFEI_URL = "http://ids1.hfut.edu.cn/amserver/UI/Login";
-    public static final String LOGIN_HEFEI_URL2 = BASE_URL_HEFEI + "StuIndex.asp";
-    public static final String LOGIN_XUANCHENG_URL = BASE_URL_XUANCHENG + "pass.asp";
+    private static final String LOGIN_HEFEI_URL = "http://ids1.hfut.edu.cn/amserver/UI/Login";
+    private static final String LOGIN_HEFEI_URL2 = BASE_URL_HEFEI + "StuIndex.asp";
+    private static final String LOGIN_XUANCHENG_URL = BASE_URL_XUANCHENG + "pass.asp";
 
-    public static final String SELECTED_URL = "student/asp/select_down_f3.asp";
-    public static final String ALL_URL = "student/asp/select_topLeft_f3.asp";
-    public static final String CLASSES_URL = "student/asp/select_topRight_f3.asp?lb=1&kcdm=";
-    public static final String SUBMIT_URL = "student/asp/selectKC_submit_f3.asp";
+    private static final String WELCOME_URL = "student/asp/s_welcome.asp";
+
+    private static final String SELECTED_URL = "student/asp/select_down_f3.asp";
+    private static final String ALL_URL = "student/asp/select_topLeft_f3.asp";
+    private static final String CLASSES_F3_URL = "student/asp/select_topRight_f3.asp?kcdm=";
+    private static final String CLASSES_URL = "student/asp/select_topRight.asp?kcdm=";
+    private static final String SUBMIT_URL = "student/asp/selectKC_submit_f3.asp";
+    private static final String GET_MEMBERS_URL = "student/asp/Jxbmdcx_1.asp";
 
     public static Map<String, String> cookie = null;
     public static String studentNo = null;
     public static String baseUrl = BASE_URL_HEFEI;
+
+    public static String xqName = null;
+    public static String xqValue = null;
 
     private static boolean login(String sno, String pwd) throws IOException {
         baseUrl = BASE_URL_HEFEI;
@@ -67,6 +74,7 @@ public class CourseTool {
             if (doc2.location().endsWith("s_index.htm")) {
                 studentNo = sno;
                 CourseAssistant.get().setLoggedIn(true);
+                welcome();
                 return true;
             } else {
                 cookie = null;
@@ -102,10 +110,63 @@ public class CourseTool {
             studentNo = sno;
             boolean success = cookie != null;
             CourseAssistant.get().setLoggedIn(success);
+            if (success) {
+                welcome();
+            }
             return success;
         } else {
             return login(sno, pwd);
         }
+    }
+
+    public static void welcome() throws IOException {
+        Document doc = Jsoup.connect(baseUrl + WELCOME_URL)
+                .userAgent("Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)")
+                .timeout(20000)
+                .header("Referer", baseUrl)
+                .header("Origin", baseUrl)
+                .header("Upgrade-Insecure-Requests", "1")
+                .cookies(cookie)
+                .get();
+        Elements nodes = doc.getElementsContainingOwnText("目前正在开放");
+        if (nodes.size() > 0) {
+            String str = nodes.text();
+            str = str.substring(6, str.indexOf("学期") + 2);
+            xqName = str;
+            String[] names = CourseAssistant.get().getResources().getStringArray(R.array.xqdmName);
+            String[] values = CourseAssistant.get().getResources().getStringArray(R.array.xqdmValue);
+            int pos = 0;
+            String value = null;
+            for (String s : names) {
+                if (s.contains(str)) {
+                    value = values[pos];
+                    break;
+                }
+                pos++;
+            }
+            xqValue = value;
+
+        }
+    }
+
+    public static ArrayList<String> getMembers(String xqdm, String kcdm, String jxbh) {
+        Document doc = null;
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            doc = Jsoup.connect(baseUrl + GET_MEMBERS_URL)
+                    .data("xqdm", xqdm)
+                    .data("kcdm", kcdm)
+                    .data("jxbh", jxbh)
+                    .post();
+            Elements nodes = doc.select("tr[height=20]");
+            for (Element e : nodes) {
+                list.add(e.child(0).text() + "\t" + e.child(1).text() + "\t" + e.child(2).text());
+            }
+            return list;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static ArrayList<SelectItem> getSelected() throws IOException {
@@ -114,7 +175,6 @@ public class CourseTool {
                     .cookies(cookie)
                     .get();
             Log.d("http get", baseUrl + SELECTED_URL);
-            Log.d("getSelected", doc.html());
             Element tbody = doc.getElementById("TableXKJG").child(0);
             ArrayList<SelectItem> list = new ArrayList<>();
             for (int i = 1; i < tbody.children().size(); i++) {
@@ -161,7 +221,6 @@ public class CourseTool {
                     .cookies(cookie)
                     .get();
             Log.d("http get", URL);
-            Log.d("getCourseList", doc.toString());
             Element kcTable = doc.getElementById("KCTable");
             if (kcTable.children().size() > 0) {
                 Element tbody = kcTable.child(0);
@@ -186,11 +245,10 @@ public class CourseTool {
         if (cookie != null) {
             ArrayList<Classroom> list = new ArrayList<>();
             Document doc;
-            doc = Jsoup.connect(baseUrl + CLASSES_URL + kcdm)
+            doc = Jsoup.connect(baseUrl + CLASSES_F3_URL + kcdm)
                     .cookies(cookie)
                     .get();
-            Log.d("http get", baseUrl + CLASSES_URL + kcdm);
-            Log.d("getClassList", doc.toString());
+            Log.d("http get", baseUrl + CLASSES_F3_URL + kcdm);
             Element JXBTable = doc.getElementById("JXBTable");
             if (JXBTable != null && JXBTable.children().size() > 0) {
                 Element tbody = JXBTable.child(0);

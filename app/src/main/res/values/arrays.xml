@@ -5,4 +5,73 @@
         <item>全校必修课</item>
         <item>本专业计划</item>
     </string-array>
+    <string-array name="xqdmName">
+        <item>2002-2003学年第一学期</item>
+        <item>2002-2003学年第二学期</item>
+        <item>2002-2003学年第二学期</item>
+        <item>2003-2004学年第二学期</item>
+        <item>2004-2005学年第一学期</item>
+        <item>2004-2005学年第二学期</item>
+        <item>2005-2006学年第一学期</item>
+        <item>2005-2006学年第二学期</item>
+        <item>2006-2007学年第一学期</item>
+        <item>2006-2007学年第二学期</item>
+        <item>2007-2008学年第一学期</item>
+        <item>2007-2008学年第二学期</item>
+        <item>2008-2009学年第一学期</item>
+        <item>2008-2009学年第二学期</item>
+        <item>2009-2010学年第一学期</item>
+        <item>2009-2010学年第二学期</item>
+        <item>2010-2011学年第一学期</item>
+        <item>2010-2011学年第二学期</item>
+        <item>2011-2012学年第一学期</item>
+        <item>2011-2012学年第二/三学期</item>
+        <item>2012-2013学年第一学期</item>
+        <item>2012-2013学年第二/三学期</item>
+        <item>2013-2014学年第一学期</item>
+        <item>2013-2014学年第二/三学期</item>
+        <item>2014-2015学年第一学期</item>
+        <item>2014-2015学年第二/三学期</item>
+        <item>2015-2016学年第一学期</item>
+        <item>2015-2016学年第二学期/暑期</item>
+        <item>2016学年-2017学年第一学期</item>
+        <item>2016-2017学年第二学期</item>
+        <item>2017-2018学年第一学期</item>
+        <item>2017-2018学年第二学期</item>
+    </string-array>
+
+    <string-array name="xqdmValue">
+        <item>001</item>
+        <item>002</item>
+        <item>003</item>
+        <item>004</item>
+        <item>005</item>
+        <item>006</item>
+        <item>007</item>
+        <item>008</item>
+        <item>009</item>
+        <item>010</item>
+        <item>011</item>
+        <item>012</item>
+        <item>013</item>
+        <item>014</item>
+        <item>015</item>
+        <item>016</item>
+        <item>017</item>
+        <item>018</item>
+        <item>019</item>
+        <item>020</item>
+        <item>021</item>
+        <item>022</item>
+        <item>023</item>
+        <item>024</item>
+        <item>025</item>
+        <item>026</item>
+        <item>027</item>
+        <item>028</item>
+        <item>029</item>
+        <item>030</item>
+        <item>031</item>
+        <item>032</item>
+    </string-array>
 </resources>
