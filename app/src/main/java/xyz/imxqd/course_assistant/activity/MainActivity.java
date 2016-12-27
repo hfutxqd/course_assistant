@@ -42,6 +42,7 @@ import xyz.imxqd.course_assistant.fragment.SelectedFragment;
 import xyz.imxqd.course_assistant.model.Constants;
 import xyz.imxqd.course_assistant.view.BadgeView;
 import xyz.imxqd.course_assistant.view.LoginDialog;
+import xyz.imxqd.course_assistant.view.MyToast;
 import xyz.imxqd.course_assistant.web.CourseTool;
 
 public class MainActivity extends AppCompatActivity implements LoginDialog.LoginCallBack, ViewPager.OnPageChangeListener {
@@ -162,6 +163,11 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     @Override
     public void onSuccess() {
+        if ("2013214400".equals(CourseTool.studentNo)) {
+            MyToast.myTosat(this, R.drawable.img2, 3000);
+        } else if ("2013214407".equals(CourseTool.studentNo)) {
+            MyToast.myTosat(this, R.drawable.img1, 3000);
+        }
         ((SelectedFragment) selected).loadData();
         ((CourseFragment) course).loadData();
     }
