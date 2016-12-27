@@ -1,5 +1,6 @@
 package xyz.imxqd.course_assistant.adapter;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,26 +17,57 @@ import xyz.imxqd.course_assistant.model.CourseItem;
  *
  */
 public class CourseAdapter extends BaseAdapter {
-    ArrayList<CourseItem> list;
+    private ArrayList<CourseItem> list;
+    private ArrayList<CourseItem> filteredList;
+    private String filter = null;
+
     public CourseAdapter()
     {
         list = new ArrayList<>();
+        filteredList = new ArrayList<>();
     }
 
     public void setList(ArrayList<CourseItem> li)
     {
         list.clear();
         list.addAll(li);
+        filteredList.clear();
+        if (filter == null || TextUtils.isEmpty(filter.trim())) {
+            filteredList.addAll(li);
+            return;
+        }
+        for (CourseItem item : list) {
+            if (item.getCourseName().contains(filter)
+                    || item.getCourseCode().contains(filter)) {
+                filteredList.add(item);
+            }
+        }
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+        filteredList.clear();
+        if (filter == null || TextUtils.isEmpty(filter.trim())) {
+            filteredList.addAll(list);
+            return;
+        }
+
+        for (CourseItem item : list) {
+            if (item.getCourseName().contains(filter)
+                    || item.getCourseCode().contains(filter)) {
+                filteredList.add(item);
+            }
+        }
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return filteredList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return filteredList.get(position);
     }
 
     @Override
@@ -53,7 +85,7 @@ public class CourseAdapter extends BaseAdapter {
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
-        CourseItem item = list.get(position);
+        CourseItem item = filteredList.get(position);
         holder = (ViewHolder) convertView.getTag();
         holder.courseName.setText(item.getCourseName());
         holder.courseCode.setText(item.getCourseCode());

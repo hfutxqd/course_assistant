@@ -3,9 +3,14 @@ package xyz.imxqd.course_assistant.fragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,7 +32,7 @@ import xyz.imxqd.course_assistant.web.CourseTool;
  * Created by imxqd on 2016/3/3.
  * 选课主界面
  */
-public class CourseFragment extends Fragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
+public class CourseFragment extends Fragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = "CourseFragment";
 
     public CourseFragment() {
@@ -43,6 +48,12 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
     Spinner spinner;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_course, container, false);
@@ -53,6 +64,24 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
         adapter = new CourseAdapter();
         listView.setAdapter(adapter);
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.course, menu);
+        MenuItem search = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) search.getActionView();
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            SearchView searchView = (SearchView) item.getActionView();
+            searchView.onActionViewExpanded();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void loadData() {
@@ -111,6 +140,20 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
                 ((MainActivity) getActivity()).setHomeAsUp(false);
             }
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        adapter.setFilter(query);
+        adapter.notifyDataSetChanged();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        adapter.setFilter(newText);
+        adapter.notifyDataSetChanged();
+        return true;
     }
 
 

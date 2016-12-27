@@ -129,7 +129,7 @@ public class ClassroomAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public void setOnClassroomitemSelectListener(OnClassroomitemSelectListener listener)
+    public void setOnClassroomItemSelectListener(OnClassroomitemSelectListener listener)
     {
         this.listener = listener;
     }
