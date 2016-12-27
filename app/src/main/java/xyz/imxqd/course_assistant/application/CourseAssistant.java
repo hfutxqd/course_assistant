@@ -15,7 +15,7 @@ import xyz.imxqd.course_assistant.model.SelectItem;
 public class CourseAssistant extends Application {
     public static long mLastLoginTime = 0;
 
-    private boolean isLoggedIn = false;
+    private static boolean isLoggedIn = false;
 
     private static CourseAssistant courseAssistant;
     private HashMap<String, String> toSubmitMap;//将要提交的课程,用于提交

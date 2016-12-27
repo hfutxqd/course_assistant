@@ -64,6 +64,11 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -107,6 +112,7 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
             try {
                 ArrayList<SelectItem> list = CourseTool.getSelected();
                 if (list != null) {
+                    Log.d(TAG, "获取课程: " + list);
                     adapter.setList(list);
                     CourseAssistant.getInstance().setSelected(list);
                     return true;
@@ -133,6 +139,7 @@ public class SelectedFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     public void loadData() {
+        Log.d(TAG, "loadData");
         if (CourseAssistant.get().isLoggedIn()) {
             task = new GetSelectedTask();
             task.execute();

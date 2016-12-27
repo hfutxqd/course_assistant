@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import xyz.imxqd.course_assistant.web.CourseTool;
  * 选课主界面
  */
 public class CourseFragment extends Fragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
+    private static final String TAG = "CourseFragment";
+
     public CourseFragment() {
 
     }
@@ -53,6 +56,7 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     public void loadData() {
+        Log.d(TAG, "loadData");
         if(!CourseAssistant.get().isLoggedIn()) {
             return;
         }
@@ -127,9 +131,11 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            Log.d(TAG, "正在获取课程列表...");
             try {
                 ArrayList<CourseItem> list = CourseTool.getCourseList(courseType);
                 if (list != null) {
+                    Log.d(TAG, "获取课程列表:" + list);
                     adapter.setList(list);
                     return true;
                 }
@@ -143,6 +149,7 @@ public class CourseFragment extends Fragment implements AdapterView.OnItemSelect
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
+                Log.d(TAG, "获取课程列表成功.");
                 adapter.notifyDataSetChanged();
             } else {
                 if (CourseTool.studentNo != null) {
