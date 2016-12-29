@@ -3,12 +3,12 @@ package xyz.imxqd.course_assistant.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,11 +27,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import xyz.imxqd.course_assistant.R;
@@ -94,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
                     .setPositiveButton(R.string.string_confirm, null)
                     .show();
             return true;
-        } else if (id == R.id.action_swich_user) {
+        } else if (id == R.id.action_switch_user) {
             SharedPreferences preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
             preferences.edit()
                     .putBoolean("auto", false)
@@ -164,15 +162,15 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     @Override
     public void onSuccess() {
+        if (!CourseTool.isOpened) {
+            Toast.makeText(this, "当前可能没有开放选课!", Toast.LENGTH_SHORT).show();
+        }
+
         if ("2013214400".equals(CourseTool.studentNo)) {
             MyToast.myTosat(this, R.drawable.img2, 3000);
         } else if ("2013214407".equals(CourseTool.studentNo)) {
             MyToast.myTosat(this, R.drawable.img1, 3000);
         }
-        if (CourseTool.xqName == null) {
-            Toast.makeText(this, "当前可能没有开放选课!", Toast.LENGTH_SHORT).show();
-        }
-
         ((SelectedFragment) selected).loadData();
         ((CourseFragment) course).loadData();
     }

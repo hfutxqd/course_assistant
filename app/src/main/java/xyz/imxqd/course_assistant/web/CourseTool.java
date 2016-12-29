@@ -46,7 +46,9 @@ public class CourseTool {
     public static String baseUrl = BASE_URL_HEFEI;
 
     public static String xqName = null;
-    public static String xqValue = null;
+    public static String xqValue = "030";
+
+    public static boolean isOpened = false;
 
     private static boolean login(String sno, String pwd) throws IOException {
         baseUrl = BASE_URL_HEFEI;
@@ -128,29 +130,39 @@ public class CourseTool {
                 .header("Upgrade-Insecure-Requests", "1")
                 .cookies(cookie)
                 .get();
+        String now = doc.getElementsContainingOwnText("现在是").text();
+        now = now.substring(3, now.indexOf("学期") + 2).trim();
         Elements nodes = doc.getElementsContainingOwnText("目前正在开放");
         if (nodes.size() > 0) {
             String str = nodes.text();
             str = str.substring(6, str.indexOf("学期") + 2);
             xqName = str;
-            String[] names = CourseAssistant.get().getResources().getStringArray(R.array.xqdmName);
-            String[] values = CourseAssistant.get().getResources().getStringArray(R.array.xqdmValue);
-            int pos = 0;
-            String value = null;
-            for (String s : names) {
-                if (s.contains(str)) {
-                    value = values[pos];
-                    break;
-                }
-                pos++;
-            }
-            xqValue = value;
-
+            xqValue = getXqdmValue(xqName, 0);
+            isOpened = true;
+        } else {
+            xqName = now;
+            xqValue = getXqdmValue(xqName, 1);
+            isOpened = false;
         }
     }
 
+    public static String getXqdmValue(String xqdmName, int offset) {
+        String[] names = CourseAssistant.get().getResources().getStringArray(R.array.xqdmName);
+        String[] values = CourseAssistant.get().getResources().getStringArray(R.array.xqdmValue);
+        int pos = 0;
+        String value = null;
+        for (String s : names) {
+            if (s.contains(xqdmName)) {
+                value = values[pos + offset];
+                break;
+            }
+            pos++;
+        }
+        return value;
+    }
+
     public static ArrayList<String> getMembers(String xqdm, String kcdm, String jxbh) {
-        Document doc = null;
+        Document doc;
         ArrayList<String> list = new ArrayList<>();
         try {
             doc = Jsoup.connect(baseUrl + GET_MEMBERS_URL)
@@ -160,7 +172,7 @@ public class CourseTool {
                     .post();
             Elements nodes = doc.select("tr[height=20]");
             for (Element e : nodes) {
-                list.add(e.child(0).text() + "\t" + e.child(1).text() + "\t" + e.child(2).text());
+                list.add(e.child(0).text() + " \t " + e.child(1).text() + " \t " + e.child(2).text());
             }
             return list;
         } catch (IOException e) {
@@ -290,6 +302,23 @@ public class CourseTool {
         }
         doc = conn.post();
         return doc;
+    }
+
+    public static HashMap<String, Boolean> submit2(HashMap<String, String> data) throws IOException {
+        Document doc;
+        Connection conn = Jsoup.connect(baseUrl + SUBMIT_URL)
+                .cookies(cookie);
+        conn.data("xh", studentNo);
+        Set<Map.Entry<String, String>> set = data.entrySet();
+        for (Map.Entry<String, String> entry : set) {
+            conn.data("kcdm", entry.getKey());
+            conn.data("jxbh", entry.getValue());
+        }
+        doc = conn.post();
+        if (doc.text().contains("选课结束")) {
+            return null;
+        }
+        return null;
     }
 
 }

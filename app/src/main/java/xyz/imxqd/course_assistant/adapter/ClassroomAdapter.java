@@ -107,17 +107,17 @@ public class ClassroomAdapter extends BaseExpandableListAdapter {
         if(tmp!= null && tmp.getClassNo().equals(item.getClassNo()))
         {
             viewHolder.btn_selectIt.setText(parent.getResources().getString(R.string.string_selected));
-            viewHolder.btn_selectIt.setBackgroundResource(R.color.Grey);
+            viewHolder.btn_selectIt.setBackgroundResource(R.color.grey);
         }else {
             viewHolder.btn_selectIt.setText(parent.getResources().getString(R.string.string_select));
-            viewHolder.btn_selectIt.setBackgroundResource(R.color.material_deep_teal_500);
+            viewHolder.btn_selectIt.setBackgroundResource(R.color.btn_bg);
         }
         viewHolder.btn_selectIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(listener != null)
                 {
-                    listener.onClassroomitemSelected(item, (Button) v);
+                    listener.onClassroomItemSelected(item, (Button) v);
                 }
             }
         });
@@ -129,12 +129,12 @@ public class ClassroomAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public void setOnClassroomItemSelectListener(OnClassroomitemSelectListener listener)
+    public void setOnClassroomItemSelectListener(OnClassroomItemSelectListener listener)
     {
         this.listener = listener;
     }
 
-    class GroupViewHolder
+    private class GroupViewHolder
     {
         TextView courseNameAndClass, teacher, campus, selectedAndTotal, weeks;
         public GroupViewHolder(View root)
@@ -162,9 +162,9 @@ public class ClassroomAdapter extends BaseExpandableListAdapter {
             btn_selectIt = (Button) root.findViewById(R.id.btn_selectIt);
         }
     }
-    OnClassroomitemSelectListener listener = null;
-    public interface OnClassroomitemSelectListener
+    OnClassroomItemSelectListener listener = null;
+    public interface OnClassroomItemSelectListener
     {
-        void onClassroomitemSelected(Classroom item, Button button);
+        void onClassroomItemSelected(Classroom item, Button button);
     }
 }

@@ -25,7 +25,7 @@ import xyz.imxqd.course_assistant.web.CourseTool;
  * Created by imxqd on 2016/3/3.
  *
  */
-public class ClassroomFragment extends Fragment implements ClassroomAdapter.OnClassroomitemSelectListener {
+public class ClassroomFragment extends Fragment implements ClassroomAdapter.OnClassroomItemSelectListener {
 
     public ClassroomFragment()
     {
@@ -69,7 +69,7 @@ public class ClassroomFragment extends Fragment implements ClassroomAdapter.OnCl
     GetClassListTask task = null;
 
     @Override
-    public void onClassroomitemSelected(Classroom item, Button button) {
+    public void onClassroomItemSelected(Classroom item, Button button) {
         CourseAssistant assistant = CourseAssistant.getInstance();
         assistant.add(getArguments().getString(ARG_COURSE_CODE), item);
         ((MainActivity)getActivity()).setBadgeCount(assistant.getNewSubmitMap().size());
